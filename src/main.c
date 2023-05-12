@@ -14,9 +14,9 @@ struct usb_driver usb_desc = {
 	.disconnect = usb_detatch,
 };
 
-static int __init module_upload(void)
+static int __init usb_driver_load(void)
 {
-	printk(KERN_INFO "Function %s is being executed\n", __FUNCTION__);
+	printk(KERN_INFO "%s: Function %s is being executed\n",  module_name(THIS_MODULE), __FUNCTION__);
 
 	int res;
 
@@ -24,7 +24,7 @@ static int __init module_upload(void)
 
 	if(res)
 	{
-		printk(KERN_ERR "unable to register USB-device!\n");
+		printk(KERN_ERR "%s: unable to register USB-device!\n",  module_name(THIS_MODULE));
 
 		return -res;
 	}
@@ -32,12 +32,12 @@ static int __init module_upload(void)
 	return 0;
 }
 
-static void __exit module_extract(void)
+static void __exit usb_driver_remove(void)
 {
-	printk(KERN_INFO "Function %s is being executed\n", __FUNCTION__);
+	printk(KERN_INFO "%s: Function %s is being executed\n",  module_name(THIS_MODULE), __FUNCTION__);
 
 	usb_deregister(&usb_desc);
 }
 
-module_init(module_upload);
-module_exit(module_extract);
+module_init(usb_driver_load);
+module_exit(usb_driver_remove);
