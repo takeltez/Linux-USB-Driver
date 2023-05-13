@@ -10,21 +10,19 @@ MODULE_DEVICE_TABLE(usb, usb_table);
 struct usb_driver usb_desc = {
 	.name = "usb_dev",
 	.id_table = usb_table,
-	.probe = usb_probe,
-	.disconnect = usb_detatch,
+	.probe = usb_plug,
+	.disconnect = usb_unplug,
 };
 
 static int __init usb_driver_load(void)
 {
-	printk(KERN_INFO "%s: Function %s is being executed\n",  module_name(THIS_MODULE), __FUNCTION__);
-
 	int res;
 
-	res = usb_register(&usb_desc);
+	printk(KERN_INFO "%s: driver is loaded\n",  module_name(THIS_MODULE));
 
-	if(res)
+	if((res = usb_register(&usb_desc)))
 	{
-		printk(KERN_ERR "%s: unable to register USB-device!\n",  module_name(THIS_MODULE));
+		printk(KERN_ERR "%s: unable to register USB device!\n",  module_name(THIS_MODULE));
 
 		return -res;
 	}
@@ -34,7 +32,7 @@ static int __init usb_driver_load(void)
 
 static void __exit usb_driver_remove(void)
 {
-	printk(KERN_INFO "%s: Function %s is being executed\n",  module_name(THIS_MODULE), __FUNCTION__);
+	printk(KERN_INFO "%s: driver is unloaded\n",  module_name(THIS_MODULE));
 
 	usb_deregister(&usb_desc);
 }
